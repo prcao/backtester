@@ -78,6 +78,7 @@ During construction, you need to specify the `Portfolio` that this snapshot is c
 
 ### MarketOrder
 `LimitBuyOrder(PortfolioSnapshot snapshot, String ticker, double quantity, double limitPrice, String openDate [, String expirationDate])`
+
 `LimitSellOrder(PortfolioSnapshot snapshot, String ticker, double quantity, double limitPrice, String openDate [, String expirationDate)`
 
 `expirationDate` will default to the date of the snapshot, if not specified.
@@ -87,12 +88,22 @@ The `execute()` function will attempt to execute the order, updating the positio
 #### Outstanding orders
 At the beginning of each new day, a new snapshot will attempt to execute all of its outstanding orders from the previous snapshot. If an order is successful, it is removed from the snapshot's outstanding order list. An order will also be removed from the list if the expiration date has passed.
 
-To queue an order, use the `PortfolioSnapshot.queueOrderAtOpen(MarketOrder order)` or `PortfolioSnapshot.queueOrderEOD(MarketOrder order)` functions. `queueOrderAtOpen` will attempt to execute the order the day it is queued and add itself to the snapshot's outstanding orders if it fails, `queueOrderAtEOD` will simply add itself to the snapshot's outstanding orders.
+To queue an order, use the 
+
+`PortfolioSnapshot.queueOrderAtOpen(MarketOrder order)` or
+
+`PortfolioSnapshot.queueOrderEOD(MarketOrder order)`
+
+ functions. `queueOrderAtOpen` will attempt to execute the order the day it is queued and add itself to the snapshot's outstanding orders if it fails, `queueOrderAtEOD` will simply add itself to the snapshot's outstanding orders.
 
 
 ### Strategy
-A strategy defines a trading strategy to be executed every market day. It is a functional interface with this signature:
-`PortfolioSnapshot execute(PortfolioSnapshot  init, String  currentDatestamp);`
+A strategy defines a trading strategy to be executed every market day. It is a functional interface with the signature
+
+
+`PortfolioSnapshot execute(PortfolioSnapshot  init, String  currentDatestamp)`
+
+
 `init` is the state of the portfolio before the strategy is executed. This function should return the state of the portfolio after the strategy has been executed.
 
 Here is what a simple do nothing strategy would look like:
@@ -110,9 +121,9 @@ Strategy badStrategy = (PortfolioSnapshot snapshot, String date) -> {
 	PortfolioSnapshot eod = new PortfolioSnapshot(snapshot);
 
 	if(close < open) {
-		eod.queueOrderEOD(new LimitBuyOrder(eod, stonk, 100, close, date));
+		eod.queueOrderAtOpen(new LimitBuyOrder(eod, stonk, 100, close, date));
 	} else {
-		eod.queueOrderEOD(new LimitSellOrder(eod, stonk, 100, close, date));
+		eod.queueOrderAtOpen(new LimitSellOrder(eod, stonk, 100, close, date));
 	}
 	
 	return eod;
