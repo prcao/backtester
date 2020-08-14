@@ -24,7 +24,7 @@ public class Portfolio {
         this.strategy = strategy;
     }
 
-    public void fill(PortfolioSnapshot initialSnapshot) {
+    public void backtest(PortfolioSnapshot initialSnapshot) {
         
         TreeSet<MarketDay> datestamps = TimeUtil.getMarketDays(initialSnapshot.date);
 

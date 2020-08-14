@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import pcao.model.data.StockInfo;
 import pcao.model.marketorder.LimitBuyOrder;
+import pcao.model.marketorder.LimitSellOrder;
 import pcao.model.portfolio.Portfolio;
 import pcao.model.portfolio.PortfolioSnapshot;
 import pcao.model.strategy.Strategy;
@@ -36,19 +37,24 @@ public class EntryPoint {
             return info.getVolume() > 500 * lastInfo.getVolume();
         };
 
-        String stonk = "AMD";
+        
 
         Strategy strategy = (PortfolioSnapshot snapshot, String date) -> {
             
+            String stonk = "AMD";
             StockInfo stockInfo = StockUtil.getQuote(stonk, date);
             double open = stockInfo.getOpen();
             double close = stockInfo.getClose();
-            double pctChange = 100 * (close - open) / open;
 
             PortfolioSnapshot eod = new PortfolioSnapshot(snapshot);
 
             if(snapshot.cash > 0) {
-                eod.queueOrderAtOpen(new LimitBuyOrder(eod, stonk, 100, open, date));
+                if(close < open) {
+                    eod.queueOrderEOD(new LimitBuyOrder(eod, stonk, 100, close, date));
+                } else {
+                    eod.queueOrderEOD(new LimitSellOrder(eod, stonk, 100, close, date));
+                }
+                
             }
         
              return eod;
@@ -60,7 +66,7 @@ public class EntryPoint {
 
         Portfolio p = new Portfolio(strategy);
         PortfolioSnapshot init = new PortfolioSnapshot(p, "2020-08-01", initialPositions, 100000);// PortfolioSnapshot.getAllCashPortfolio("2020-01-02", 100000);
-        p.fill(init);
+        p.backtest(init);
 
         p.getData().saveJSONToFile("results.txt");
         StockUtil.shutdown();
