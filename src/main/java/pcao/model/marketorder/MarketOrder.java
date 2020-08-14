@@ -15,10 +15,11 @@ public abstract class MarketOrder {
     protected double quantity;
 
     // we don't store snapshot. we add it solely for logging purposes
-    public MarketOrder(PortfolioSnapshot snapshot, String ticker, double quantity, String openDate) {
+    public MarketOrder(PortfolioSnapshot snapshot, String ticker, double quantity, String openDate, String expirationDate) {
         this.ticker = ticker;
         this.quantity = quantity;
         this.openDate = openDate;
+        this.expirationDate = expirationDate;
         this.status = MarketOrderStatus.OPEN;
 
         snapshot.portfolio.addHistoryEvent(new MarketEvent(this, MarketEventType.OPENED, openDate));

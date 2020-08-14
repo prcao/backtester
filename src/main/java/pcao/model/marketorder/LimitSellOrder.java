@@ -7,7 +7,11 @@ import pcao.model.util.StockUtil;
 public class LimitSellOrder extends LimitOrder {
 
     public LimitSellOrder(PortfolioSnapshot snapshot, String ticker, double quantity, double limitPrice, String openDate) {
-        super(snapshot, ticker, quantity, limitPrice, openDate);
+        super(snapshot, ticker, quantity, limitPrice, openDate, snapshot.date);
+    }
+
+    public LimitSellOrder(PortfolioSnapshot snapshot, String ticker, double quantity, double limitPrice, String openDate, String expirationDate) {
+        super(snapshot, ticker, quantity, limitPrice, openDate, expirationDate);
     }
 
     protected boolean executeHelper(PortfolioSnapshot snapshot) {

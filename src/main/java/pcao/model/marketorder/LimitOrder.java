@@ -6,8 +6,8 @@ public abstract class LimitOrder extends MarketOrder {
 
     protected double limitPrice;
 
-    public LimitOrder(PortfolioSnapshot snapshot, String ticker, double quantity, double limitPrice, String openDate) {
-        super(snapshot, ticker, quantity, openDate);
+    public LimitOrder(PortfolioSnapshot snapshot, String ticker, double quantity, double limitPrice, String openDate, String expirationDate) {
+        super(snapshot, ticker, quantity, openDate, expirationDate);
         this.limitPrice = limitPrice;
     }
 
