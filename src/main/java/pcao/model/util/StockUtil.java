@@ -19,7 +19,7 @@ public class StockUtil {
 
     private static List<String> listOfAllStocks;
     private static JedisPool jedisPool;
-    private static Gson gson;
+    public static Gson gson;
 
     public static void init() {
         jedisPool = new JedisPool(new JedisPoolConfig(), "localhost");

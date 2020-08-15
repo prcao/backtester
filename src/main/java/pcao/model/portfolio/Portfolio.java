@@ -66,6 +66,14 @@ public class Portfolio {
         history.add(event);
     }
 
+    public List<MarketEvent> getHistory() {
+        return history;
+    }
+
+    public String getHistoryJSON() {
+        return StockUtil.gson.toJson(history);
+    }
+
     public DataSet getData() {
         DataSet ds = new DataSet();
 

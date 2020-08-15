@@ -1,6 +1,7 @@
 package pcao.model.marketorder.event;
 
 import pcao.model.marketorder.MarketOrder;
+import pcao.model.util.StockUtil;
 
 /**
  * This class is for logging purposes, Records the opening or execution of a
@@ -19,6 +20,10 @@ public class MarketEvent {
         this.order = order;
         this.type = type;
         this.date = date;
+    }
+
+    public String getJSON() {
+        return StockUtil.gson.toJson(this);
     }
 
     public String toString() {

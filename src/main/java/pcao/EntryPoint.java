@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
+import pcao.model.Backtester;
 import pcao.model.data.StockInfo;
 import pcao.model.marketorder.LimitBuyOrder;
 import pcao.model.marketorder.LimitSellOrder;
@@ -22,9 +23,7 @@ public class EntryPoint {
 
     public static void main(String[] args) throws IOException, FileNotFoundException {
 
-        StockUtil.init();
-        Logger.init();
-        TimeUtil.init();
+        Backtester.init();
 
         MarketScannerCondition condition = (String ticker, String date) -> {
 
@@ -68,9 +67,7 @@ public class EntryPoint {
         PortfolioSnapshot init = new PortfolioSnapshot(p, "2020-08-01", initialPositions, 100000);// PortfolioSnapshot.getAllCashPortfolio("2020-01-02", 100000);
         p.backtest(init);
 
-        p.getData().saveJSONToFile("results.txt");
-        StockUtil.shutdown();
-        Logger.close();
-        TimeUtil.shutdown();
+        //p.getData().saveJSONToFile("results.txt");
+        Backtester.close();
     }
 }
