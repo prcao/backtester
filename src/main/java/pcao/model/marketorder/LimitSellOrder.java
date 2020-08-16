@@ -14,23 +14,25 @@ public class LimitSellOrder extends LimitOrder {
         super(snapshot, ticker, quantity, limitPrice, openDate, expirationDate);
     }
 
-    protected boolean executeHelper(PortfolioSnapshot snapshot) {
+    protected MarketOrderExecutionResult executeHelper(PortfolioSnapshot snapshot) {
 
         StockInfo info = StockUtil.getQuote(ticker, snapshot.date);
         
         // if price does not reach limit price, fail to execute
         if(info.getHigh() > limitPrice) {
-            return false;
+            return new MarketOrderExecutionResult(false, "Stock price did not hit limit price");
         }
 
         // if not enough stonks, fail to execute
-        if(snapshot.positions.getOrDefault(ticker, 0.0) < quantity) {
-            return false;
+        double numShares = snapshot.positions.getOrDefault(ticker, 0.0);
+
+        if(numShares < quantity) {
+            return new MarketOrderExecutionResult(false, "Trying to sell " + quantity + " shares, but only own " + numShares + " shares");
         }
 
         snapshot.cash += limitPrice * quantity;
         snapshot.positions.put(ticker, snapshot.positions.getOrDefault(ticker, 0.0) - quantity);
-        return true;
+        return new MarketOrderExecutionResult(true);
     }
 
     protected MarketOrderType getType() {

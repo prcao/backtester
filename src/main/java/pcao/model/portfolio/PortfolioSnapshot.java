@@ -81,7 +81,7 @@ public class PortfolioSnapshot {
 
                 if (expiration.compareTo(now) <= 0) {
                     order.setMarketOrderStatus(MarketOrderStatus.EXPIRED);
-                    portfolio.addHistoryEvent(new MarketEvent(order, MarketEventType.EXPIRED, date));
+                    portfolio.addHistoryEvent(new MarketEvent(order, MarketEventType.EXPIRED, date, "Expiration date: " + order.getExpirationDate()));
                     continue;
                 }
             }

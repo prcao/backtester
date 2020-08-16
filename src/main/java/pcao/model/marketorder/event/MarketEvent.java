@@ -14,12 +14,17 @@ public class MarketEvent {
 
     private MarketOrder order;
     private MarketEventType eventType;
-    private String date;
+    private String date, message;
 
     public MarketEvent(MarketOrder order, MarketEventType eventType, String date) {
+        this(order, eventType, date, null);
+    }
+
+    public MarketEvent(MarketOrder order, MarketEventType eventType, String date, String message) {
         this.order = order;
         this.eventType = eventType;
         this.date = date;
+        this.message = message;
     }
 
     public String getJSON() {
@@ -27,6 +32,6 @@ public class MarketEvent {
     }
 
     public String toString() {
-        return "[" + date + "]" + order.toString() + " " + eventType.toString();
+        return "[" + date + "]" + order.toString() + " " + eventType.toString() + " | " + message;
     }
 }

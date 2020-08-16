@@ -14,6 +14,20 @@ public abstract class MarketOrder {
         BUY, SELL;
     }
 
+    protected class MarketOrderExecutionResult {
+        boolean success;
+        String message;
+
+        protected MarketOrderExecutionResult(boolean success) {
+            this(success, null);
+        }
+
+        protected MarketOrderExecutionResult(boolean success, String message) {
+            this.success = success;
+            this.message = message;
+        }
+    }
+
     protected MarketOrderType orderType;
     protected MarketOrderStatus status;
     protected String ticker, openDate, expirationDate;
@@ -34,20 +48,24 @@ public abstract class MarketOrder {
 
     protected abstract MarketOrderType getType();
 
-    protected abstract boolean executeHelper(PortfolioSnapshot snapshot);
+    // returns message
+    protected abstract MarketOrderExecutionResult executeHelper(PortfolioSnapshot snapshot);
 
     public boolean execute(PortfolioSnapshot snapshot) {
 
-        boolean success = executeHelper(snapshot);
+        MarketOrderExecutionResult result = executeHelper(snapshot);
+        MarketEventType eventType;
 
-        if (success) {
+        if (result.success) {
             setMarketOrderStatus(MarketOrderStatus.FILLED);
-            snapshot.portfolio.addHistoryEvent(new MarketEvent(this, MarketEventType.EXECUTED, snapshot.date));
+            eventType = MarketEventType.EXECUTED;
         } else {
-            snapshot.portfolio.addHistoryEvent(new MarketEvent(this, MarketEventType.FAILED_TO_EXECUTE, snapshot.date));
+            eventType = MarketEventType.FAILED_TO_EXECUTE;
         }
 
-        return success;
+        snapshot.portfolio.addHistoryEvent(new MarketEvent(this, eventType, snapshot.date, result.message));
+
+        return result.success;
     }
 
     public String getExpirationDate() {

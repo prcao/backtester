@@ -7,12 +7,10 @@ import java.util.HashMap;
 import pcao.model.Backtester;
 import pcao.model.data.StockInfo;
 import pcao.model.marketorder.LimitBuyOrder;
-import pcao.model.marketorder.LimitSellOrder;
 import pcao.model.portfolio.Portfolio;
 import pcao.model.portfolio.PortfolioSnapshot;
 import pcao.model.strategy.Strategy;
 import pcao.model.time.TimeUtil;
-import pcao.model.util.Logger;
 import pcao.model.util.MarketScannerCondition;
 import pcao.model.util.StockUtil;
 
@@ -50,7 +48,7 @@ public class EntryPoint {
                 eod.executeOrderAndQueue(new LimitBuyOrder(eod, stonk, 100, close, date));
             }
         
-             return eod;
+            return eod;
         };
 
         // strategy = new HoldStrategy();
