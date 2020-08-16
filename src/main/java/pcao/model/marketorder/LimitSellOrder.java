@@ -33,6 +33,10 @@ public class LimitSellOrder extends LimitOrder {
         return true;
     }
 
+    protected MarketOrderType getType() {
+        return MarketOrderType.SELL;
+    }
+
     @Override
     public String toString() {
         return "SELL " + super.toString();

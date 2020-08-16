@@ -10,6 +10,11 @@ public abstract class MarketOrder {
         FILLED, EXPIRED, OPEN;
     }
 
+    public enum MarketOrderType {
+        BUY, SELL;
+    }
+
+    protected MarketOrderType orderType;
     protected MarketOrderStatus status;
     protected String ticker, openDate, expirationDate;
     protected double quantity;
@@ -22,8 +27,12 @@ public abstract class MarketOrder {
         this.expirationDate = expirationDate;
         this.status = MarketOrderStatus.OPEN;
 
+        this.orderType = getType();
+
         snapshot.portfolio.addHistoryEvent(new MarketEvent(this, MarketEventType.OPENED, openDate));
     }
+
+    protected abstract MarketOrderType getType();
 
     protected abstract boolean executeHelper(PortfolioSnapshot snapshot);
 

@@ -19,11 +19,11 @@ import pcao.model.util.StockUtil;
 
 public class PortfolioSnapshot {
 
-    private PortfolioSnapshot previousSnapshot;
-    public Portfolio portfolio;
+    private transient PortfolioSnapshot previousSnapshot;
+    public transient Portfolio portfolio;
     public String date;
     public HashMap<String, Double> positions;
-    public double cash;
+    public double cash, value;
     public List<MarketOrder> outstandingOrders = new ArrayList<>();
 
     public PortfolioSnapshot(PortfolioSnapshot snapshot) {
@@ -40,10 +40,11 @@ public class PortfolioSnapshot {
         this.date = date;
         this.positions = new HashMap<>(positions);
         this.cash = cash;
+        this.value = calculateValue();
     }
 
     // get total value of this snapshot
-    public double getValue() {
+    private double calculateValue() {
 
         double total = cash;
 
@@ -91,11 +92,6 @@ public class PortfolioSnapshot {
             }
         }
 
-
-        //remove completed orders
-        // for(MarketOrder order : completedOrders) {
-        //     outstandingOrders.remove(order);
-        // }
         outstandingOrders = 
             outstandingOrders
                 .stream()
@@ -104,7 +100,7 @@ public class PortfolioSnapshot {
     }
 
     // queue market order, but first try to execute it
-    public void queueOrderAtOpen(MarketOrder order) {
+    public void executeOrderAndQueue(MarketOrder order) {
 
         if (!order.execute(this)) {
             outstandingOrders.add(order);
@@ -112,7 +108,7 @@ public class PortfolioSnapshot {
     }
 
     // queue market order without trying to execute
-    public void queueOrderEOD(MarketOrder order) {
+    public void queueOrder(MarketOrder order) {
         outstandingOrders.add(order);
     }
 
@@ -138,6 +134,10 @@ public class PortfolioSnapshot {
         }
 
         return snapshot;
+    }
+
+    public String getJSON() {
+        return StockUtil.gson.toJson(this);
     }
 
     public void setPreviousSnapshot(PortfolioSnapshot previousSnapshot) {

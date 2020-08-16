@@ -31,6 +31,10 @@ public class TimeUtil {
         return marketDays.lower(new MarketDay(currentDate)).getDate();
     }
 
+    public static String nextMarketDay(String currentDate) {
+        return marketDays.higher(new MarketDay(currentDate)).getDate();
+    }
+
     public static Date parse(String datetime) {
         try {
             return FORMAT.parse(datetime);

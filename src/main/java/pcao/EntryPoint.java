@@ -35,8 +35,7 @@ public class EntryPoint {
 
             return info.getVolume() > 500 * lastInfo.getVolume();
         };
-
-        
+  
 
         Strategy strategy = (PortfolioSnapshot snapshot, String date) -> {
             
@@ -48,12 +47,7 @@ public class EntryPoint {
             PortfolioSnapshot eod = new PortfolioSnapshot(snapshot);
 
             if(snapshot.cash > 0) {
-                if(close < open) {
-                    eod.queueOrderEOD(new LimitBuyOrder(eod, stonk, 100, close, date));
-                } else {
-                    eod.queueOrderEOD(new LimitSellOrder(eod, stonk, 100, close, date));
-                }
-                
+                eod.executeOrderAndQueue(new LimitBuyOrder(eod, stonk, 100, close, date));
             }
         
              return eod;
@@ -64,9 +58,10 @@ public class EntryPoint {
         HashMap<String, Double> initialPositions = new HashMap<>();
 
         Portfolio p = new Portfolio(strategy);
-        PortfolioSnapshot init = new PortfolioSnapshot(p, "2020-08-01", initialPositions, 100000);// PortfolioSnapshot.getAllCashPortfolio("2020-01-02", 100000);
+        PortfolioSnapshot init = new PortfolioSnapshot(p, "2020-06-01", initialPositions, 100000);
         p.backtest(init);
-
+        System.out.println(p.getHistoryJSON());
+        // System.out.println(p.getSnapshotJSON());
         //p.getData().saveJSONToFile("results.txt");
         Backtester.close();
     }

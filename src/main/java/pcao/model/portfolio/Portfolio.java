@@ -16,7 +16,7 @@ import pcao.model.util.StockUtil;
 
 public class Portfolio {
 
-    private TreeMap<String, PortfolioSnapshot> portfolio = new TreeMap<>();
+    public TreeMap<String, PortfolioSnapshot> portfolio = new TreeMap<>();
     private List<MarketEvent> history = new LinkedList<>();
     private Strategy strategy;
 
@@ -43,7 +43,7 @@ public class Portfolio {
                 // execute outstanding orders, then strategy
                 PortfolioSnapshot result = new PortfolioSnapshot(prevSnapshot, datestamp);
                 result.updateAndExecuteOutstandingOrders();
-                result = strategy.execute(result, datestamp);
+                result = new PortfolioSnapshot(strategy.execute(result, datestamp), datestamp);
 
                 //set result data
                 result.setPreviousSnapshot(snapshot);
@@ -56,10 +56,8 @@ public class Portfolio {
             Logger.log("Completed day " + complete + " out of " + datestamps.size());
         }
 
-        System.out.println(history);
-
         Logger.log("Completed calculations of portfolio");
-        System.out.println("Final value: " + snapshot.getValue());
+        System.out.println("Final value: " + snapshot.value);
     }
 
     public void addHistoryEvent(MarketEvent event) {
@@ -74,11 +72,15 @@ public class Portfolio {
         return StockUtil.gson.toJson(history);
     }
 
+    public String getSnapshotJSON() {
+        return StockUtil.gson.toJson(portfolio.values());
+    }
+
     public DataSet getData() {
         DataSet ds = new DataSet();
 
         for (String datestamp : portfolio.keySet()) {
-            ds.addData(new DataPoint(datestamp, portfolio.get(datestamp).getValue()));
+            ds.addData(new DataPoint(datestamp, portfolio.get(datestamp).value));
         }
 
         return ds;

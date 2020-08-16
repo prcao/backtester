@@ -13,12 +13,12 @@ public class MarketEvent {
     }
 
     private MarketOrder order;
-    private MarketEventType type;
+    private MarketEventType eventType;
     private String date;
 
-    public MarketEvent(MarketOrder order, MarketEventType type, String date) {
+    public MarketEvent(MarketOrder order, MarketEventType eventType, String date) {
         this.order = order;
-        this.type = type;
+        this.eventType = eventType;
         this.date = date;
     }
 
@@ -27,6 +27,6 @@ public class MarketEvent {
     }
 
     public String toString() {
-        return "[" + date + "]" + order.toString() + " " + type.toString();
+        return "[" + date + "]" + order.toString() + " " + eventType.toString();
     }
 }
