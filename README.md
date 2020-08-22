@@ -1,6 +1,8 @@
 
 # Backtester
 
+## Check out the visualization tool I built for this -- https://github.com/prcao/backtester-viz
+
 Simple backtesting framework written in Java, powered by redis. ***Still in early development.***
 
 ![enter image description here](https://wompampsupport.azureedge.net/fetchimage?siteId=7575&v=2&jpgQuality=100&width=700&url=https://i.kym-cdn.com/entries/icons/facebook/000/029/959/Screen_Shot_2019-06-05_at_1.26.32_PM.jpg)
